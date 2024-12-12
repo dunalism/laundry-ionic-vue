@@ -17,11 +17,15 @@ export function useLaundryServices() {
   const error = ref<string | null>(null);
   const lastVisible = ref<any>(null); //berisi dokumen terakhir yang difetch
   const hashmore = ref(true);
+  const currentPage = ref(1);
+  const totalPages = ref(1);
+  const pageSize = 4;
 
   const fetchServices = async (
     city: string,
     searchQuery = "",
-    pageSize = 4
+    pageSize = 4,
+    page = 1
   ) => {
     try {
       loading.value = true;
@@ -34,7 +38,7 @@ export function useLaundryServices() {
         limit(pageSize)
       );
 
-      if (lastVisible.value) {
+      if (lastVisible.value && page > 1) {
         q = query(q, startAfter(lastVisible.value));
       }
 
@@ -54,10 +58,15 @@ export function useLaundryServices() {
         ...doc.data(),
       })) as LaundryService[];
 
-      services.value = [...services.value, ...newServices];
+      services.value = newServices;
       if (snapshot.docs.length < pageSize) {
         hashmore.value = false;
       }
+
+      totalPages.value = Math.ceil(snapshot.size + 1);
+
+      console.log("totalPages.value", totalPages.value);
+      console.log("currentPage.value", currentPage.value);
 
       return newServices;
     } catch (e: any) {
@@ -78,6 +87,8 @@ export function useLaundryServices() {
     loading,
     error,
     hashmore,
+    currentPage,
+    totalPages,
     fetchServices,
     resetServices,
   };

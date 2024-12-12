@@ -22,8 +22,16 @@ import { useAuth } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 import { clearStorage } from "../firebase/localStorage";
 
-const { services, loading, error, hashmore, fetchServices, resetServices } =
-  useLaundryServices();
+const {
+  services,
+  loading,
+  error,
+  hashmore,
+  currentPage,
+  totalPages,
+  fetchServices,
+  resetServices,
+} = useLaundryServices();
 const searchQuery = ref("");
 const selectedCity = ref("Bandung");
 const serviceDisplay = ref(services);
@@ -55,6 +63,30 @@ const loadServices = async () => {
 const loadMore = async () => {
   if (hashmore.value) {
     await fetchServices(selectedCity.value, searchQuery.value, 4);
+  }
+};
+
+const loadNextPage = async () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    await fetchServices(
+      selectedCity.value,
+      searchQuery.value,
+      4,
+      currentPage.value
+    );
+  }
+};
+
+const loadPrevPage = async () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    await fetchServices(
+      selectedCity.value,
+      searchQuery.value,
+      4,
+      currentPage.value
+    );
   }
 };
 
@@ -119,9 +151,7 @@ onMounted(loadServices);
           </ion-segment-button>
         </ion-segment>
 
-        <div v-if="loading && services.length == 0" class="text-center py-4">
-          Loading...
-        </div>
+        <div v-if="loading" class="text-center py-4">Loading...</div>
 
         <div v-else-if="error" class="text-center text-red-500 py-4">
           {{ error }}
@@ -135,12 +165,22 @@ onMounted(loadServices);
           />
         </div>
         <div
-          :class="`flex items-center justify-center ${
+          :class="`flex items-center gap-10 md:gap-52 justify-center ${
             loading ? 'hidden' : ''
           } `"
         >
-          <ion-button @click.stop="loadMore" class=" "
-            >Lebih banyak..</ion-button
+          <ion-button
+            :disabled="currentPage == 1 ? true : false"
+            @click.stop="loadPrevPage"
+            class=" "
+            >Prev</ion-button
+          >
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <ion-button
+            :disabled="currentPage == totalPages ? true : false"
+            @click.stop="loadNextPage"
+            class=" "
+            >Next</ion-button
           >
         </div>
       </div>

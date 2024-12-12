@@ -13,20 +13,23 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  IonIcon,
+  IonSpinner,
   IonRadio,
   IonRadioGroup,
 } from "@ionic/vue";
+import { checkmarkCircle } from "ionicons/icons";
 import { useOrders } from "../composables/useOrders";
 import AppLayout from "../components/AppLayout.vue";
 import type { Order } from "../types";
 
 const route = useRoute();
 const router = useRouter();
-const { getOrder, updateOrderStatus } = useOrders();
+const { getOrder, updateOrderStatus, loading } = useOrders();
 
 const order = ref<Order | null>(null);
 const selectedPaymentMethod = ref("");
-const loading = ref(true);
+const isLoading = ref(true);
 const error = ref<string | null>(null);
 const showSuccessModal = ref(false);
 
@@ -49,7 +52,7 @@ const loadOrder = async () => {
   } catch (e: any) {
     error.value = e.message;
   } finally {
-    loading.value = false;
+    isLoading.value = false;
   }
 };
 
@@ -59,9 +62,9 @@ const handlePayment = async () => {
   try {
     await updateOrderStatus(order.value.id, "completed");
     showSuccessModal.value = true;
-    setTimeout(() => {
-      router.push("/orders");
-    }, 2000);
+    // setTimeout(() => {
+    //   router.push("/orders");
+    // }, 2000);
   } catch (e: any) {
     error.value = e.message;
   }
@@ -82,7 +85,7 @@ onMounted(loadOrder);
     </ion-header>
 
     <ion-content>
-      <div v-if="loading" class="flex justify-center items-center h-full">
+      <div v-if="isLoading" class="flex justify-center items-center h-full">
         <div class="text-center">Loading...</div>
       </div>
 
@@ -127,12 +130,10 @@ onMounted(loadOrder);
           <h3 class="text-lg font-semibold mb-4">Metode Pembayaran</h3>
           <ion-radio-group v-model="selectedPaymentMethod">
             <ion-item v-for="method in paymentMethods" :key="method.id">
-              <ion-label>{{ method.name }}</ion-label>
-              <ion-radio
-                :aria-label="method.name"
-                :value="method.id"
-                slot="start"
-              ></ion-radio>
+              <!-- <ion-label>{{ method.name }}</ion-label> -->
+              <ion-radio :aria-label="method.name" :value="method.id">{{
+                method.name
+              }}</ion-radio>
             </ion-item>
           </ion-radio-group>
         </div>
@@ -140,9 +141,10 @@ onMounted(loadOrder);
         <ion-button
           expand="block"
           @click="handlePayment"
-          :disabled="!selectedPaymentMethod"
+          :disabled="!selectedPaymentMethod || showSuccessModal"
         >
-          Confirm Payment
+          <span v-if="loading"> <ion-spinner /> </span>
+          <span v-else>Konfirmasi Pembayaran</span>
         </ion-button>
       </div>
 
@@ -151,11 +153,13 @@ onMounted(loadOrder);
         v-if="showSuccessModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       >
-        <div class="bg-white rounded-lg p-6 text-center">
-          <h3 class="text-xl font-bold text-green-600 mb-2">
-            Payment Successful!
-          </h3>
-          <p class="text-gray-600">Redirecting to orders page...</p>
+        <div class="bg-slate-50 rounded-lg p-6 text-center">
+          <ion-icon :icon="checkmarkCircle" class="text-6xl" color="success" />
+          <h3 class="text-2xl font-bold mb-2">Pembayaran berhasil!</h3>
+          <p class="text-gray-600 mb-6">
+            Pesanan anda telah dikonfirmasi dan sedang diproses.
+          </p>
+          <ion-button @click="router.push('/')">Kembali ke beranda</ion-button>
         </div>
       </div>
     </ion-content>

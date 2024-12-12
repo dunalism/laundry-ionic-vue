@@ -118,13 +118,12 @@ onMounted(loadService);
           </div>
         </div>
 
-        <div class="mb-6">
-          <ion-searchbar
-            v-model="searchQuery"
-            placeholder="Search products..."
-            class="mb-4"
-          />
-        </div>
+        <ion-searchbar
+          class="mb-4 sticky top-[-8px] z-50"
+          color="light"
+          v-model="searchQuery"
+          placeholder="Cari layanan"
+        />
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ProductCard

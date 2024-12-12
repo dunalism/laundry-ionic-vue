@@ -26,7 +26,6 @@ const {
   services,
   loading,
   error,
-  hashmore,
   currentPage,
   totalPages,
   fetchServices,
@@ -34,7 +33,6 @@ const {
 } = useLaundryServices();
 const searchQuery = ref("");
 const selectedCity = ref("Bandung");
-const serviceDisplay = ref(services);
 const cities = ["Bandung", "Jakarta", "Surabaya"];
 const { signOut } = useAuth();
 const router = useRouter();
@@ -49,21 +47,15 @@ const router = useRouter();
 //     isHidden.value = false;
 //   }
 //   lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-//   // console.log("scrollTop", scrollTop);
-//   // console.log("lastScrollTop", lastScrollTop);
+//   //
+//   //
 // };
 
-// watch(isHidden, () => console.log("isHidden.value", isHidden.value));
+// watch(isHidden, () =>
 
 const loadServices = async () => {
   resetServices();
   await fetchServices(selectedCity.value, searchQuery.value);
-};
-
-const loadMore = async () => {
-  if (hashmore.value) {
-    await fetchServices(selectedCity.value, searchQuery.value, 4);
-  }
 };
 
 const loadNextPage = async () => {

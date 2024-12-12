@@ -65,9 +65,6 @@ export function useLaundryServices() {
 
       totalPages.value = Math.ceil(snapshot.size + 1);
 
-      console.log("totalPages.value", totalPages.value);
-      console.log("currentPage.value", currentPage.value);
-
       return newServices;
     } catch (e: any) {
       error.value = e.message;

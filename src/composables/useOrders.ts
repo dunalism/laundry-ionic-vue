@@ -98,9 +98,13 @@ export function useOrders() {
     status: "pending" | "completed" | "cancelled"
   ) => {
     try {
+      loading.value = true;
       await updateDoc(doc(db, "orders", orderId), { status });
     } catch (e: any) {
+      loading.value = false;
       throw new Error(e.message);
+    } finally {
+      loading.value = false;
     }
   };
 

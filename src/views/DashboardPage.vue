@@ -12,6 +12,7 @@ import {
   IonLabel,
   IonButtons,
   IonMenuButton,
+  IonButton,
   IonIcon,
 } from "@ionic/vue";
 import { logOut } from "ionicons/icons";
@@ -21,17 +22,40 @@ import { useAuth } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 import { clearStorage } from "../firebase/localStorage";
 
-const { services, loading, error, fetchServices, resetServices } =
+const { services, loading, error, hashmore, fetchServices, resetServices } =
   useLaundryServices();
 const searchQuery = ref("");
 const selectedCity = ref("Bandung");
+const serviceDisplay = ref(services);
 const cities = ["Bandung", "Jakarta", "Surabaya"];
 const { signOut } = useAuth();
 const router = useRouter();
+// const isHidden = ref(false);
+// let lastScrollTop = 0;
+
+// const handleScroll = (ev: CustomEvent) => {
+//   const scrollTop = ev.detail?.scrollTop as number;
+//   if (scrollTop > lastScrollTop) {
+//     isHidden.value = true;
+//   } else {
+//     isHidden.value = false;
+//   }
+//   lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+//   // console.log("scrollTop", scrollTop);
+//   // console.log("lastScrollTop", lastScrollTop);
+// };
+
+// watch(isHidden, () => console.log("isHidden.value", isHidden.value));
 
 const loadServices = async () => {
   resetServices();
   await fetchServices(selectedCity.value, searchQuery.value);
+};
+
+const loadMore = async () => {
+  if (hashmore.value) {
+    await fetchServices(selectedCity.value, searchQuery.value, 4);
+  }
 };
 
 const handleSearch = async () => {
@@ -81,21 +105,23 @@ onMounted(loadServices);
         <ion-searchbar
           v-model="searchQuery"
           placeholder="Cari layanan laundry..."
-          @ionInput="handleSearch"
-          class="mb-4"
+          @ionInput="handleSearch()"
+          class="mb-4 sticky top-[-8px] z-50"
+          color="light"
         />
 
         <ion-segment
           v-model="selectedCity"
           @ionChange="handleCityChange($event.detail.value as string)"
-          class="mb-6"
         >
           <ion-segment-button v-for="city in cities" :value="city" :key="city">
             <ion-label>{{ city }}</ion-label>
           </ion-segment-button>
         </ion-segment>
 
-        <div v-if="loading" class="text-center py-4">Loading...</div>
+        <div v-if="loading && services.length == 0" class="text-center py-4">
+          Loading...
+        </div>
 
         <div v-else-if="error" class="text-center text-red-500 py-4">
           {{ error }}
@@ -107,6 +133,15 @@ onMounted(loadServices);
             :key="service.id"
             :service="service"
           />
+        </div>
+        <div
+          :class="`flex items-center justify-center ${
+            loading ? 'hidden' : ''
+          } `"
+        >
+          <ion-button @click.stop="loadMore" class=" "
+            >Lebih banyak..</ion-button
+          >
         </div>
       </div>
     </ion-content>

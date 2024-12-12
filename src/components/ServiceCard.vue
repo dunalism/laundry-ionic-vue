@@ -22,7 +22,7 @@ const goToServiceDetails = () => {
 </script>
 
 <template>
-  <ion-card class="" @click="goToServiceDetails">
+  <ion-card class="flex flex-col justify-between" @click="goToServiceDetails">
     <img
       :src="service.image"
       :alt="service.name"

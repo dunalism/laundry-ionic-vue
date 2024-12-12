@@ -15,7 +15,8 @@ export function useLaundryServices() {
   const services = ref<LaundryService[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
-  const lastVisible = ref<any>(null);
+  const lastVisible = ref<any>(null); //berisi dokumen terakhir yang difetch
+  const hashmore = ref(true);
 
   const fetchServices = async (
     city: string,
@@ -54,6 +55,10 @@ export function useLaundryServices() {
       })) as LaundryService[];
 
       services.value = [...services.value, ...newServices];
+      if (snapshot.docs.length < pageSize) {
+        hashmore.value = false;
+      }
+
       return newServices;
     } catch (e: any) {
       error.value = e.message;
@@ -72,6 +77,7 @@ export function useLaundryServices() {
     services,
     loading,
     error,
+    hashmore,
     fetchServices,
     resetServices,
   };

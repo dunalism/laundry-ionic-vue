@@ -1,0 +1,32 @@
+{
+  "name": "ionic-vue-laundry",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.16.2",
+    "@ionic/vue": "^7.8.0",
+    "@ionic/vue-router": "^7.8.0",
+    "@vueuse/core": "^10.9.0",
+    "@vueuse/firebase": "^10.9.0",
+    "firebase": "^10.8.0",
+    "ionicons": "^7.2.2",
+    "vue": "^3.4.38",
+    "vue-router": "^4.3.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.3",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.2",
+    "vue-tsc": "^2.1.4"
+  }
+}

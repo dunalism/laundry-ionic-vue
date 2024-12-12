@@ -1,0 +1,114 @@
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+  IonButtons,
+  IonMenuButton,
+  IonIcon,
+} from "@ionic/vue";
+import { logOut } from "ionicons/icons";
+import { useLaundryServices } from "../composables/useLaundryServices";
+import ServiceCard from "../components/ServiceCard.vue";
+import { useAuth } from "../composables/useAuth";
+import { useRouter } from "vue-router";
+import { clearStorage } from "../firebase/localStorage";
+
+const { services, loading, error, fetchServices, resetServices } =
+  useLaundryServices();
+const searchQuery = ref("");
+const selectedCity = ref("Bandung");
+const cities = ["Bandung", "Jakarta", "Surabaya"];
+const { signOut } = useAuth();
+const router = useRouter();
+
+const loadServices = async () => {
+  resetServices();
+  await fetchServices(selectedCity.value, searchQuery.value);
+};
+
+const handleSearch = async () => {
+  await loadServices();
+};
+
+const handleCityChange = async (city: string) => {
+  selectedCity.value = city;
+  await loadServices();
+};
+
+const handleSignOut = async () => {
+  await signOut();
+  clearStorage();
+  router.push("/");
+};
+
+onMounted(loadServices);
+
+//debug
+</script>
+
+<template>
+  <!-- <ion-menu content-id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Menu Content</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">this is menu content</ion-content>
+  </ion-menu> -->
+  <ion-page id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Beranda</ion-title>
+        <div @click="handleSignOut" slot="end">
+          <ion-icon class="h-8 w-8 mr-3 cursor-pointer" :icon="logOut" />
+        </div>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="">
+      <div class="p-4">
+        <ion-searchbar
+          v-model="searchQuery"
+          placeholder="Cari layanan laundry..."
+          @ionInput="handleSearch"
+          class="mb-4"
+        />
+
+        <ion-segment
+          v-model="selectedCity"
+          @ionChange="handleCityChange($event.detail.value as string)"
+          class="mb-6"
+        >
+          <ion-segment-button v-for="city in cities" :value="city" :key="city">
+            <ion-label>{{ city }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <div v-if="loading" class="text-center py-4">Loading...</div>
+
+        <div v-else-if="error" class="text-center text-red-500 py-4">
+          {{ error }}
+        </div>
+
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ServiceCard
+            v-for="service in services"
+            :key="service.id"
+            :service="service"
+          />
+        </div>
+      </div>
+    </ion-content>
+  </ion-page>
+</template>

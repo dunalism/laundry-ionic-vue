@@ -14,10 +14,13 @@ import {
   IonMenuButton,
   IonButton,
   IonIcon,
+  IonMenu,
+  IonLoading,
 } from "@ionic/vue";
 import { logOut } from "ionicons/icons";
 import { useLaundryServices } from "../composables/useLaundryServices";
 import ServiceCard from "../components/ServiceCard.vue";
+import MenuComponent from "../components/MenuComponent.vue";
 import { useAuth } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 import { clearStorage } from "../firebase/localStorage";
@@ -103,24 +106,13 @@ onMounted(loadServices);
 </script>
 
 <template>
-  <!-- <ion-menu content-id="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Menu Content</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">this is menu content</ion-content>
-  </ion-menu> -->
-  <ion-page id="main-content">
+  <MenuComponent>
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>Beranda</ion-title>
-        <div @click="handleSignOut" slot="end">
-          <ion-icon class="h-8 w-8 mr-3 cursor-pointer" :icon="logOut" />
-        </div>
       </ion-toolbar>
     </ion-header>
 
@@ -143,7 +135,14 @@ onMounted(loadServices);
           </ion-segment-button>
         </ion-segment>
 
-        <div v-if="loading" class="text-center py-4">Loading...</div>
+        <ion-loading
+          trigger="open-loading"
+          message="Loading.."
+          duration="3000"
+          v-if="loading"
+          class=""
+          :isOpen="true"
+        ></ion-loading>
 
         <div v-else-if="error" class="text-center text-red-500 py-4">
           {{ error }}
@@ -177,5 +176,5 @@ onMounted(loadServices);
         </div>
       </div>
     </ion-content>
-  </ion-page>
+  </MenuComponent>
 </template>

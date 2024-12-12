@@ -10,6 +10,7 @@ import {
   IonBackButton,
   IonButtons,
   IonSearchbar,
+  IonLoading,
 } from "@ionic/vue";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
@@ -42,8 +43,6 @@ const loadService = async () => {
       .map((doc) => doc.data())
       .map((product) => ({ ...product, id: serviceDoc.id }));
 
-    console.log(productsList);
-
     if (serviceDoc.exists()) {
       service.value = {
         id: serviceDoc.id,
@@ -75,9 +74,14 @@ onMounted(loadService);
     </ion-header>
 
     <ion-content>
-      <div v-if="loading" class="flex justify-center items-center h-full">
-        <div class="text-center">Loading...</div>
-      </div>
+      <ion-loading
+        trigger="open-loading"
+        message="Loading.."
+        duration="3000"
+        v-if="loading"
+        class=""
+        :isOpen="true"
+      ></ion-loading>
 
       <div v-else-if="error" class="flex justify-center items-center h-full">
         <div class="text-center text-red-500">{{ error }}</div>

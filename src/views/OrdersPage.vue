@@ -6,9 +6,12 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonButtons,
+  IonMenuButton,
+  IonLoading,
 } from "@ionic/vue";
 import { useOrders } from "../composables/useOrders";
-import AppLayout from "../components/AppLayout.vue";
+import MenuComponent from "../components/MenuComponent.vue";
 
 const { orders, loading, error, getUserOrders } = useOrders();
 
@@ -49,16 +52,26 @@ onMounted(getUserOrders);
 </script>
 
 <template>
-  <ion-page>
+  <MenuComponent>
     <ion-header>
       <ion-toolbar>
-        <ion-title>My Orders</ion-title>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Pesananku</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
       <div class="p-4">
-        <div v-if="loading" class="text-center py-4">Loading...</div>
+        <ion-loading
+          trigger="open-loading"
+          message="Loading.."
+          duration="3000"
+          v-if="loading"
+          class=""
+          :isOpen="true"
+        ></ion-loading>
 
         <div v-else-if="error" class="text-center text-red-500 py-4">
           {{ error }}
@@ -68,7 +81,7 @@ onMounted(getUserOrders);
           v-else-if="orders.length === 0"
           class="text-center py-4 text-gray-500"
         >
-          No orders found
+          Belum ada pesanan
         </div>
 
         <div v-else class="space-y-4">
@@ -110,5 +123,5 @@ onMounted(getUserOrders);
         </div>
       </div>
     </ion-content>
-  </ion-page>
+  </MenuComponent>
 </template>

@@ -10,25 +10,26 @@ import {
   IonBackButton,
   IonButtons,
   IonTitle,
+  IonSpinner,
 } from "@ionic/vue";
 import { useAuth } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 import { loginSchema } from "../composables/useAuth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
+import { db } from "../firebase/config";
 import { setItem } from "../firebase/localStorage";
 
-const { login, loading, error } = useAuth();
+const { login, error } = useAuth();
 const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 const validationError = ref("");
-
-console.log("auth.currentUser", auth.currentUser);
+const loading = ref(false);
 
 const handleLogin = async () => {
   try {
+    loading.value = true;
     validationError.value = "";
     const result = loginSchema.parse({
       email: email.value,
@@ -41,9 +42,12 @@ const handleLogin = async () => {
     setItem("currentUser", { ...userInfo, auth: true });
     router.push("/dashboard");
   } catch (err: any) {
+    loading.value = false;
     if (err.errors) {
       validationError.value = err.errors[0].message;
     }
+  } finally {
+    loading.value = false;
   }
 };
 </script>
@@ -96,7 +100,8 @@ const handleLogin = async () => {
 
             <div>
               <ion-button expand="block" type="submit" :disabled="loading">
-                {{ loading ? "Loading..." : "Sign in" }}
+                <span v-if="loading"> <ion-spinner name="dots" /> </span>
+                <span v-else>Login</span>
               </ion-button>
             </div>
           </form>

@@ -13,6 +13,7 @@ import {
   IonTextarea,
   IonInput,
   IonButton,
+  IonLoading,
 } from "@ionic/vue";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
@@ -102,14 +103,19 @@ onMounted(loadServiceAndProduct);
         <ion-buttons slot="start">
           <ion-back-button default-href="/dashboard"></ion-back-button>
         </ion-buttons>
-        <ion-title>Detail pesanan</ion-title>
+        <ion-title>Pesanan</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="">
-      <div v-if="loading" class="flex justify-center items-center h-full">
-        <div class="text-center">Loading...</div>
-      </div>
+      <ion-loading
+        trigger="open-loading"
+        message="Loading.."
+        duration="3000"
+        v-if="loading"
+        class=""
+        :isOpen="true"
+      ></ion-loading>
 
       <div v-else-if="error" class="flex justify-center items-center h-full">
         <div class="text-center text-red-500">{{ error }}</div>

@@ -10,6 +10,7 @@ import {
   IonBackButton,
   IonTitle,
   IonButtons,
+  IonSpinner,
 } from "@ionic/vue";
 import { useAuth } from "../composables/useAuth";
 import { useRouter } from "vue-router";
@@ -18,16 +19,18 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { setItem } from "../firebase/localStorage";
 
-const { register, loading, error } = useAuth();
+const { register, error } = useAuth();
 const router = useRouter();
 
 const name = ref("");
 const email = ref("");
 const password = ref("");
 const validationError = ref("");
+const loading = ref(false);
 
 const handleRegister = async () => {
   try {
+    loading.value = true;
     validationError.value = "";
     const result = registerSchema.parse({
       name: name.value,
@@ -41,9 +44,12 @@ const handleRegister = async () => {
     setItem("currentUser", { ...userInfo, auth: true });
     router.push("/dashboard");
   } catch (err: any) {
+    loading.value = false;
     if (err.errors) {
       validationError.value = err.errors[0].message;
     }
+  } finally {
+    loading.value = false;
   }
 };
 </script>
@@ -104,7 +110,8 @@ const handleRegister = async () => {
 
             <div>
               <ion-button expand="block" type="submit" :disabled="loading">
-                {{ loading ? "Loading..." : "Register" }}
+                <span v-if="loading"> <ion-spinner name="dots" /> </span>
+                <span v-else>Register</span>
               </ion-button>
             </div>
           </form>

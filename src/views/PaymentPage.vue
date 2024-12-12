@@ -17,6 +17,7 @@ import {
   IonSpinner,
   IonRadio,
   IonRadioGroup,
+  IonLoading,
 } from "@ionic/vue";
 import { checkmarkCircle } from "ionicons/icons";
 import { useOrders } from "../composables/useOrders";
@@ -85,9 +86,14 @@ onMounted(loadOrder);
     </ion-header>
 
     <ion-content>
-      <div v-if="isLoading" class="flex justify-center items-center h-full">
-        <div class="text-center">Loading...</div>
-      </div>
+      <ion-loading
+        trigger="open-loading"
+        message="Loading.."
+        duration="3000"
+        v-if="loading"
+        class=""
+        :isOpen="true"
+      ></ion-loading>
 
       <div v-else-if="error" class="flex justify-center items-center h-full">
         <div class="text-center text-red-500">{{ error }}</div>

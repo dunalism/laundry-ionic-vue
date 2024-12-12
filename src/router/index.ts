@@ -12,6 +12,10 @@ const routes: Array<RouteRecordRaw> = [
     meta: { logged: true },
   },
   {
+    path: "/home",
+    redirect: "/",
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("../views/LoginPage.vue"),
@@ -72,7 +76,6 @@ router.beforeEach((to, _from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const isLogged = to.matched.some((record) => record.meta.logged);
   const isAuthenticated = auth.currentUser || userLocal.value?.auth;
-  console.log("isAuthenticated", isAuthenticated);
 
   if (requiresAuth && !isAuthenticated) {
     next("/");

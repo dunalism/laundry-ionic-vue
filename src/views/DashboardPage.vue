@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import {
-  IonPage,
   IonHeader,
   IonToolbar,
   IonTitle,
@@ -13,17 +12,12 @@ import {
   IonButtons,
   IonMenuButton,
   IonButton,
-  IonIcon,
-  IonMenu,
   IonLoading,
 } from "@ionic/vue";
-import { logOut } from "ionicons/icons";
 import { useLaundryServices } from "../composables/useLaundryServices";
 import ServiceCard from "../components/ServiceCard.vue";
 import MenuComponent from "../components/MenuComponent.vue";
 import { useAuth } from "../composables/useAuth";
-import { useRouter } from "vue-router";
-import { clearStorage } from "../firebase/localStorage";
 
 const {
   services,
@@ -37,8 +31,7 @@ const {
 const searchQuery = ref("");
 const selectedCity = ref("Bandung");
 const cities = ["Bandung", "Jakarta", "Surabaya"];
-const { signOut } = useAuth();
-const router = useRouter();
+useAuth();
 // const isHidden = ref(false);
 // let lastScrollTop = 0;
 
@@ -94,12 +87,6 @@ const handleCityChange = async (city: string) => {
   await loadServices();
 };
 
-const handleSignOut = async () => {
-  await signOut();
-  clearStorage();
-  router.push("/");
-};
-
 onMounted(loadServices);
 
 //debug
@@ -118,13 +105,15 @@ onMounted(loadServices);
 
     <ion-content class="">
       <div class="p-4">
-        <ion-searchbar
-          v-model="searchQuery"
-          placeholder="Cari layanan laundry..."
-          @ionInput="handleSearch()"
-          class="mb-4 sticky top-[-8px] z-50"
-          color="light"
-        />
+        <div class="mb-4 sticky top-[-8px] z-50">
+          <ion-searchbar
+            v-model="searchQuery"
+            placeholder="Cari layanan laundry..."
+            @ionInput="handleSearch()"
+            :debounce="1000"
+            color="light"
+          />
+        </div>
 
         <ion-segment
           v-model="selectedCity"

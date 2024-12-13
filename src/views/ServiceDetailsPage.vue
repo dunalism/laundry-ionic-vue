@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import {
   IonPage,
   IonHeader,
@@ -14,12 +14,10 @@ import {
 } from "@ionic/vue";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
-import AppLayout from "../components/AppLayout.vue";
 import ProductCard from "../components/ProductCard.vue";
 import type { LaundryService, Product } from "../types";
 
 const route = useRoute();
-const router = useRouter();
 const service = ref<LaundryService | null>(null);
 const products = ref<Product[] | null>(null);
 const loading = ref(true);
@@ -122,12 +120,13 @@ onMounted(loadService);
           </div>
         </div>
 
-        <ion-searchbar
-          class="mb-4 sticky top-[-8px] z-50"
-          color="light"
-          v-model="searchQuery"
-          placeholder="Cari layanan"
-        />
+        <div class="mb-4 sticky top-[-8px] z-50">
+          <ion-searchbar
+            color="light"
+            v-model="searchQuery"
+            placeholder="Cari layanan"
+          />
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ProductCard

@@ -24,12 +24,12 @@ let users = userLocal.value;
 
 const toHome = () => {
   thisPage.value = "/dashboard";
-  router.push("/dashboard");
+  router.replace("/dashboard");
 };
 
 const toOrders = () => {
   thisPage.value = "/orders";
-  router.push("/orders");
+  router.replace("/orders");
 };
 
 const handleSignOut = async () => {
@@ -57,7 +57,7 @@ const handleSignOut = async () => {
       <div class="flex flex-col p-2 gap-2">
         <div
           @click="toHome"
-          class="rounded-md hover:bg-[#f4f5f8] hover:text-blue-700 h-10 border-b px-2 flex gap-2 items-center"
+          class="rounded-md cursor-pointer hover:bg-[#f4f5f8] hover:text-blue-700 h-10 border-b px-2 flex gap-2 items-center"
           :class="thisPage == '/dashboard' ? 'bg-[#f4f5f8] text-blue-700' : ''"
         >
           <ion-icon :icon="home" class="h-6 w-6" />
@@ -65,7 +65,7 @@ const handleSignOut = async () => {
         </div>
         <div
           @click="toOrders"
-          class="rounded-md hover:bg-[#f4f5f8] hover:text-blue-700 h-10 border-b px-2 flex gap-2 items-center"
+          class="rounded-md cursor-pointer hover:bg-[#f4f5f8] hover:text-blue-700 h-10 border-b px-2 flex gap-2 items-center"
           :class="thisPage == '/orders' ? 'bg-[#f4f5f8] text-blue-700' : ''"
         >
           <ion-icon :icon="receipt" class="h-6 w-6" />
@@ -75,7 +75,7 @@ const handleSignOut = async () => {
       <ion-menu-toggle>
         <div
           @click="handleSignOut"
-          class="rounded-md hover:bg-[#f4f5f8] hover:text-blue-700 h-10 px-2 flex gap-2 items-center m-2 absolute bottom-20 w-[95%]"
+          class="rounded-md cursor-pointer hover:bg-[#f4f5f8] hover:text-blue-700 h-10 px-2 flex gap-2 items-center m-2 absolute bottom-20 w-[95%]"
         >
           <ion-icon :icon="logOut" class="h-7 w-7" />
           <p>Keluar</p>

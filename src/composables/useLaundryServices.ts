@@ -19,7 +19,6 @@ export function useLaundryServices() {
   const hashmore = ref(true);
   const currentPage = ref(1);
   const totalPages = ref(1);
-  const pageSize = 4;
 
   const fetchServices = async (
     city: string,
@@ -63,7 +62,8 @@ export function useLaundryServices() {
         hashmore.value = false;
       }
 
-      totalPages.value = Math.ceil(snapshot.size + 1);
+      const plus = currentPage.value == 1 ? 0 : 1;
+      totalPages.value = Math.ceil(snapshot.size + plus);
 
       return newServices;
     } catch (e: any) {

@@ -42,7 +42,7 @@ const handleRegister = async () => {
     const userDoc = await getDoc(usersCollectionRef);
     const userInfo = userDoc.data();
     setItem("currentUser", { ...userInfo, auth: true });
-    router.push("/dashboard");
+    router.replace("/dashboard");
   } catch (err: any) {
     loading.value = false;
     if (err.errors) {

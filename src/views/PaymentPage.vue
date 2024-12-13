@@ -10,18 +10,14 @@ import {
   IonBackButton,
   IonButtons,
   IonButton,
-  IonList,
   IonItem,
-  IonLabel,
   IonIcon,
   IonSpinner,
   IonRadio,
   IonRadioGroup,
-  IonLoading,
 } from "@ionic/vue";
 import { checkmarkCircle } from "ionicons/icons";
 import { useOrders } from "../composables/useOrders";
-import AppLayout from "../components/AppLayout.vue";
 import type { Order } from "../types";
 
 const route = useRoute();
@@ -86,16 +82,7 @@ onMounted(loadOrder);
     </ion-header>
 
     <ion-content>
-      <ion-loading
-        trigger="open-loading"
-        message="Loading.."
-        duration="3000"
-        v-if="loading"
-        class=""
-        :isOpen="true"
-      ></ion-loading>
-
-      <div v-else-if="error" class="flex justify-center items-center h-full">
+      <div v-if="error" class="flex justify-center items-center h-full">
         <div class="text-center text-red-500">{{ error }}</div>
       </div>
 
@@ -165,7 +152,9 @@ onMounted(loadOrder);
           <p class="text-gray-600 mb-6">
             Pesanan anda telah dikonfirmasi dan sedang diproses.
           </p>
-          <ion-button @click="router.push('/')">Kembali ke beranda</ion-button>
+          <ion-button @click="router.replace('/')"
+            >Kembali ke beranda</ion-button
+          >
         </div>
       </div>
     </ion-content>

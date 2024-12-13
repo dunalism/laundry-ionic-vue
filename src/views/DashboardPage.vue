@@ -87,6 +87,7 @@ const handleCityChange = async (city: string) => {
   await loadServices();
 };
 
+//saat komponen telah dimuat, jalankan fungsinya
 onMounted(loadServices);
 
 //debug

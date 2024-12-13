@@ -72,6 +72,7 @@ const router = createRouter({
 
 router.beforeEach((to, _from, next) => {
   const { userLocal } = useAuth();
+  //logic proteksi router, sehingga yang belum login tidak akan bisa ke halaman dashboard, orders, dll. dan yang telah login tidak akan bisa ke halaman login
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const isLogged = to.matched.some((record) => record.meta.logged);

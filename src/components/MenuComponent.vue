@@ -20,21 +20,21 @@ import { clearStorage } from "../firebase/localStorage";
 const router = useRouter();
 const { userLocal, signOut } = useAuth();
 const thisPage = ref(router.currentRoute.value.path);
-let users = userLocal.value;
+let users = ref(userLocal.value);
 
 const toHome = () => {
   thisPage.value = "/dashboard";
-  router.replace("/dashboard");
+  router.push("/dashboard");
 };
 
 const toOrders = () => {
   thisPage.value = "/orders";
-  router.replace("/orders");
+  router.push("/orders");
 };
 
 const handleSignOut = async () => {
   await signOut();
-  users = null;
+  users.value = null;
   clearStorage();
   router.replace("/home");
 };

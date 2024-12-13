@@ -40,6 +40,7 @@ const handleLogin = async () => {
     const userDoc = await getDoc(usersCollectionRef);
     const userInfo = userDoc.data();
     setItem("currentUser", { ...userInfo, auth: true });
+    //replace agar component lifecycle dijalankan ulang. router.push tidak memicu component lifecycle
     router.replace("/dashboard");
   } catch (err: any) {
     loading.value = false;
